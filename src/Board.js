@@ -79,12 +79,25 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var temp = 0;
+      for (var i = 0; i < this.attributes.n; i++) {
+        if (this.attributes[rowIndex][i] === 1) {
+          temp++;
+          if (temp > 1) {
+            return true;
+          }
+        }
+      }
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var result = false;
+      for (var i = 0; i < this.attributes.n; i++) {
+        result = result || this.hasRowConflictAt(i);
+      }
+      return result;
     },
 
 
@@ -94,12 +107,25 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var count = 0;
+      for (var i = 0; i < this.attributes.n; i++) {
+        if (this.attributes[i][colIndex] === 1) {
+          count++;
+          if (count > 1) {
+            return true;
+          }
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var results = false;
+      for (var i = 0; i < this.attributes.n; i++) {
+        results = results || this.hasColConflictAt(i);
+      }
+      return results;
     },
 
 
@@ -109,12 +135,52 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var colPar = majorDiagonalColumnIndexAtFirstRow;
+      var count = 0;
+
+      // if parameter === 0 check 0,0 1,1 2,2 n-0,n
+        // also check 1,0 2,1 n,n-1
+        // also check 2,0 n,n-2
+      // if parameter === 1 check 0,1 1,2 n-1,n 
+      // if parameter === 2 check 0,2 n-2,n
+      // if parameter === n return false
+
+      // Start the check at row equal to (column-parameter) and column equal to parameter
+      for (var i = colPar; i < this.attributes.n; i++) {
+        var row = i - colPar;
+        if (this.attributes[row][i] === 1) {
+          count++;
+          if (count > 1) {
+            return true;
+          }
+        }  
+      }
+      if (colPar === 0) {
+        for (var j = 1; j < this.attributes.n; j++) {
+          count = 0;
+          for (var k = colPar; k < this.attributes.n - j; k++) {
+            if (this.attributes[k + j][k] === 1) {
+              count++;
+              if (count > 1) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      return false;
+      // Increment the column by 1 (row is equal to column minus parameter)
+      // Stop when column becomes n
+
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var results = false;
+      for (var i = 0; i < this.attributes.n; i++) {
+        results = results || this.hasMajorDiagonalConflictAt(i);
+      }
+      return results;
     },
 
 
