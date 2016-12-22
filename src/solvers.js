@@ -23,7 +23,7 @@ window.findNRooksSolution = function(n) {
   var arrayDecisions = [];
   // start by creating an empty board (var gameBoard = new Board({"n":n}))
   var gameBoard = new Board({'n': n});
-
+  debugger;
   var makeDecisions = function(col) {
     if (arrayDecisions.length === n) {
       // if all decisions pass and we build full board
@@ -49,6 +49,7 @@ window.findNRooksSolution = function(n) {
       // if any tests return true, gameBoard.attributes[arrayDecisions[0].row][arrayDecisions[0].column] = 0 ...
       gameBoard.attributes[decision.row][decision.col] = 0; // possibly recurse after this point
       // increment column coordinate by 1 (arrayDecisions[0].column++)
+      arrayDecisions.splice(arrayDecisions.length - 1, 1);
       decision.col++;
       // if column becomes larger than n...
       if (decision.col > n) {
@@ -71,7 +72,7 @@ window.findNRooksSolution = function(n) {
       makeDecisions();
     }
   };
-  solution = makeDecisions();
+  makeDecisions();
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
