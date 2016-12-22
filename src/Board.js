@@ -190,12 +190,55 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      
+      // starts at (0, paramter) => ends at (parameter, 0)
+        // starts at (startingrow, parameter) => ends at (n,n--)
+
+      // parameter === 4 check 0,4 1,3 2,2 3,1 4,0  
+        // also check 1,4 2,3 3,2 4,1
+        // also check 2,4 3,3 4,2
+        // also check 3,4 4,3
+      // parameter === 3 check 0,3 1,2 2,1 3,0  
+      // parameter === 2 check 0,2 1,1 2,0
+      // parameter === 1 check 0,1 1,0
+      // parameter === 0 return false
+
+      var colPar = minorDiagonalColumnIndexAtFirstRow;
+      var count = 0;
+      for (var i = colPar; i >= 0; i--) {
+        if (this.attributes[colPar - i][i] === 1) {
+          count++;
+          if (count > 1) {
+            return true;
+          }
+        }
+      }
+      if (colPar === (this.attributes.n - 1)) {
+        for (var j = 1; j < this.attributes.n; j++) {
+          count = 0;
+          var row = j;
+          // we need to increment row at the same time we decrement column so we do not get excess count++
+          for (var k = colPar; k >= j; k--) {
+            if (this.attributes[row][k] === 1) {
+              count++;
+              if (count > 1) {
+                return true;
+              }
+            }
+            row++;
+          }
+        }
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var results = false;
+      for (var i = (this.attributes.n - 1); i >= 0; i--) {
+        results = results || this.hasMinorDiagonalConflictAt(i);
+      }
+      return results;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
@@ -212,3 +255,17 @@
   };
 
 }());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
