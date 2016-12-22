@@ -16,8 +16,10 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
-
+  // need a array that stores queen placements
+  var solution = [];
+  // need an object to store the coordinates of queen placements
+  // start by creating an empty board (by invoking makeEmptyMatrix ()) 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
