@@ -136,6 +136,7 @@
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       var colPar = majorDiagonalColumnIndexAtFirstRow;
+      colPar = Math.max(colPar, 0);
       var count = 0;
 
       // if parameter === 0 check 0,0 1,1 2,2 n-0,n
@@ -146,6 +147,7 @@
       // if parameter === n return false
 
       // Start the check at row equal to (column-parameter) and column equal to parameter
+      
       for (var i = colPar; i < this.attributes.n; i++) {
         var row = i - colPar;
         if (this.attributes[row][i] === 1) {
@@ -204,6 +206,8 @@
       // parameter === 0 return false
 
       var colPar = minorDiagonalColumnIndexAtFirstRow;
+      colPar = Math.min(colPar, this.attributes.n - 1);
+      
       var count = 0;
       for (var i = colPar; i >= 0; i--) {
         if (this.attributes[colPar - i][i] === 1) {

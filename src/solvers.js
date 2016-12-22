@@ -134,12 +134,19 @@ window.findNQueensSolution = function(n) {
         // increment last decision column coordinate by 1
         var deletePastDecisions = function () {
           var temp = arrayDecisions[arrayDecisions.length - 1].col;
+          gameBoard.attributes[arrayDecisions[arrayDecisions.length - 1].row][arrayDecisions[arrayDecisions.length - 1].col] = 0;
+          arrayDecisions.splice(arrayDecisions.length - 1, 1);
           temp++;
-          debugger;
           if (temp >= n) {
-            arrayDecisions.splice(arrayDecisions.length - 1, 1);
+            if (arrayDecisions[arrayDecisions.length - 1] === undefined) {
+              gameBoard = new Board({'n': n});
+              return gameBoard;
+            }
+            temp = arrayDecisions[arrayDecisions.length - 1].col;
             gameBoard.attributes[arrayDecisions[arrayDecisions.length - 1].row][arrayDecisions[arrayDecisions.length - 1].col] = 0;
-            deletePastDecisions();
+            arrayDecisions.splice(arrayDecisions.length - 1, 1);
+            temp++;
+            makeDecisions(temp);
           } else {
             makeDecisions(temp);
           }
