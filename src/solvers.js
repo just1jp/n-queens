@@ -76,58 +76,72 @@ window.findNRooksSolution = function(n) {
   return solution;
 };
 
+
+window.copyBoard = function(board) {
+  var rows = board.rows();
+  var cloneRows = [];
+  for (var i = 0; i < rows.length; i++) {
+    cloneRows.push(rows[i].slice());
+  }
+  var newBoard = new Board(cloneRows);
+  return newBoard;
+};
+
+
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = [];
-  // for loop that runs n times
-    // Create recursive function that takes (current n value)
-      // for loop that 
-      // create a new board
-  
+  var solution = [];
+
+  // create a for loop that runs from 0 to n - 1
+  // create a function that takes an object as a parameter
+  // if obj is undefined, obj = obj || object with property of col: i, children: [], gameboard: [[]..[]]
+  // create an object with property of col: i, and children: []
+
+
+  // Passing in undefined into togglePiece function...FIX
+
+
+  for (var col = 0; col < n; col++) {
+    var treealizer = function(obj) {
+      for (var j = 0; j < n; j++) {
+        var childBoard = copyBoard(obj.board);
+        var childNode = {'col': j, 'children': [], 'board': childBoard, 'depth': obj.depth + 1};
+        childNode.board.togglePiece(childNode.depth, childNode.col);
+        if (childNode.depth === n) {
+          solution.push(obj.board);
+          return;
+        }
+        if (!childBoard.hasAnyRooksConflicts()) {
+          obj.children.push(childNode);
+        }
+        treealizer(obj.children[j]);
+      }
+
+    };
+    var board = new Board({'n': n});
+    board.togglePiece(0, col);
+    treealizer({'col': col, 'children': [], 'board': board, 'depth': 0});
+  }
 
 
 
+// var board = new Board({'n': 3});
+// var newBoard = Object.create(board);
+
+// board.togglePiece(0, 0);
+// var template = board.rows().slice();
+// var newBoard = new Board(template);
+// newBoard.togglePiece(1,0);
 
 
-
-
-
-
-
-
-
-  // var board = new Board({'n': n});
-  // for (var i = 0; i < n; i++) {
-  //   board.togglePiece(i, 0);
-  // }
-  // if (!board.hasAnyRooksConflicts(board)) {
-  //   solutionCount.push(board.rows());
-  // }
-  // for (var m = 0; m < n; m++) {
-  //   // when go down a new row, reset board to 1 in left column
-  //   board = new Board({'n': n});
-  //   for (var i = 0; i < n; i++) {
-  //     board.togglePiece(i, 0);
-  //   }
-  //   // for loop that iterates over the rows (starting at 0 and runs to n-1)
-  //   for (var j = m; j < n; j++) {
-  //     // for loop that iterates over the columns (starting at 0 and runs to n-1)
-  //     for (var k = 0; k < n - 1; k++) {
-  //       // Toggle off current queen
-  //       board.togglePiece(j, k);
-  //       // Toggle on next queen
-  //       board.togglePiece(j, k + 1);
-  //       // if tests return false push into solutionCount
-  //       if (!board.hasAnyRooksConflicts(board)) {
-  //         solutionCount.push(board.rows());
-  //       }
-  //     }
-  //   }
-  // }
-
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount.length;
+  console.log('Number of solutions for ' + n + ' rooks:', solution);
+  return solution.length;
 };
+
+
+
+
+
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {  
@@ -184,8 +198,11 @@ window.findNQueensSolution = function(n) {
           temp++;
           if (temp >= n) {
             if (arrayDecisions[arrayDecisions.length - 1] === undefined) {
-              gameBoard = new Board({'n': n});
-              return gameBoard;
+              // gameBoard = new Board({'n': n});
+              for (var m = 0; m < n; m++) {
+                solution.push(gameBoard.attributes[m]);
+              }
+              return solution;
             }
             temp = arrayDecisions[arrayDecisions.length - 1].col;
             gameBoard.attributes[arrayDecisions[arrayDecisions.length - 1].row][arrayDecisions[arrayDecisions.length - 1].col] = 0;
