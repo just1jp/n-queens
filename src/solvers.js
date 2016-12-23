@@ -92,29 +92,20 @@ window.copyBoard = function(board) {
 window.countNRooksSolutions = function(n) {
   var solution = [];
 
-  // create a for loop that runs from 0 to n - 1
-  // create a function that takes an object as a parameter
-  // if obj is undefined, obj = obj || object with property of col: i, children: [], gameboard: [[]..[]]
-  // create an object with property of col: i, and children: []
-
-
-  // Passing in undefined into togglePiece function...FIX
-
-
   for (var col = 0; col < n; col++) {
     var treealizer = function(obj) {
       for (var j = 0; j < n; j++) {
         var childBoard = copyBoard(obj.board);
         var childNode = {'col': j, 'children': [], 'board': childBoard, 'depth': obj.depth + 1};
-        childNode.board.togglePiece(childNode.depth, childNode.col);
         if (childNode.depth === n) {
           solution.push(obj.board);
           return;
         }
+        childNode.board.togglePiece(childNode.depth, childNode.col);
+        obj.children.push(childNode);
         if (!childBoard.hasAnyRooksConflicts()) {
-          obj.children.push(childNode);
+          treealizer(obj.children[j]);
         }
-        treealizer(obj.children[j]);
       }
 
     };
@@ -123,18 +114,7 @@ window.countNRooksSolutions = function(n) {
     treealizer({'col': col, 'children': [], 'board': board, 'depth': 0});
   }
 
-
-
-// var board = new Board({'n': 3});
-// var newBoard = Object.create(board);
-
-// board.togglePiece(0, 0);
-// var template = board.rows().slice();
-// var newBoard = new Board(template);
-// newBoard.togglePiece(1,0);
-
-
-  console.log('Number of solutions for ' + n + ' rooks:', solution);
+  console.log('Number of solutions for ' + n + ' rooks:', solution.length);
   return solution.length;
 };
 
@@ -236,10 +216,34 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solution = [];
+  if (n ===0) {
+    return 1;
+  }
+  for (var col = 0; col < n; col++) {
+    var treealizer = function(obj) {
+      for (var j = 0; j < n; j++) {
+        var childBoard = copyBoard(obj.board);
+        var childNode = {'col': j, 'children': [], 'board': childBoard, 'depth': obj.depth + 1};
+        if (childNode.depth === n) {
+          solution.push(obj.board);
+          return;
+        }
+        childNode.board.togglePiece(childNode.depth, childNode.col);
+        obj.children.push(childNode);
+        if (!childBoard.hasAnyQueensConflicts()) {
+          treealizer(obj.children[j]);
+        }
+      }
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+    };
+    var board = new Board({'n': n});
+    board.togglePiece(0, col);
+    treealizer({'col': col, 'children': [], 'board': board, 'depth': 0});
+  }
+
+  console.log('Number of solutions for ' + n + ' queens:', solution.length);
+  return solution.length;
 };
 
 
